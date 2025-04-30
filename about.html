@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #121212;
+            line-height: 1.6;
+            padding-top: 60px;
+            text-align: center;
+            color: white;
+        }
+
+        nav {
+            background-color: #333;
+            padding: 15px 20px;
+            font-size: 24px;
+            text-align: center;
+            font-weight: bold;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav a {
+            font-size: 16px;
+            margin-left: 15px;
+            text-decoration: none;
+            color: #f8c102;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        .nav-buttons {
+            display: flex;
+            align-items: center;
+        }
+
+        nav button {
+            background-color: #f8c102;
+            color: black;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+            margin-left: 10px;
+        }
+
+        nav button:hover {
+            background-color: #e6b800;
+        }
+
+        .video-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 80vh;
+            margin-top: 20px;
+        }
+
+        .video-container video {
+            width: 90%;
+            max-width: 1280px;
+            max-height: 80vh;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(255, 255, 255, 0.2);
+            object-fit: contain;
+        }
+
+        #content {
+            text-align: justify;
+            max-width: 80%;
+            margin: 20px auto;
+            font-size: 18px;
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                font-size: 18px;
+                padding: 10px;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .video-container {
+                height: auto;
+            }
+
+            .video-container video {
+                width: 100%;
+                max-height: 60vh;
+            }
+
+            #content {
+                max-width: 90%;
+                font-size: 16px;
+            }
+        }
+
+        body.light-mode {
+            background-color: #f5f5f5;
+            color: black;
+        }
+
+        nav.light-mode {
+            background-color: #f5f5f5;
+        }
+
+        nav.light-mode a {
+            color: #333;
+        }
+
+        nav.light-mode button {
+            background-color: #333;
+            color: #f5f5f5;
+        }
+
+        #content.light-mode {
+            color: #333;
+        }
+
+        #content.light-mode p {
+            color: #333;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav>
+        <span>ABOUT US</span>
+        <a href="index.html">BACK ↩</a>
+        <button onclick="logout()">Logout</button>
+        <button onclick="toggleLanguage()">🇺🇸 English / 🇸🇦 العربية</button>
+        <button onclick="toggleMode()">🌙 / ☀️</button>
+    </nav>
+
+    <!-- Video Section -->
+    <div class="video-container">
+        <video autoplay loop muted playsinline>
+            <source src="video sayed.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
+    <!-- Paragraph Section -->
+    <div id="content">
+        <p id="text">
+            In each and every country around the world that had wars and even organizations, all prioritize on remembering their fallen heroes with memorial days and stones sculpted in them their names. These memorials are done to pay tribute to the bravery and sacrifices of soldiers. They ensure that the names and stories of those who fought and died are not forgotten. Memorials help preserve history by providing the future generations with a tangible connection to the past and remind them of the events and people that shaped their nation today. The memorials of the fallen martyrs will eternally help educate and teach what the martyrs fought for, what true and rightful causes they stood with against evil and inhuman. They are the compass of the people in the roughest seas during their darkest hour into salvation.
+            The number of people martyred and casualties in any war could reach a hundred-thousand or millions, this poses a great issue in preserving the data of people that died. In addition, having a stone slab written on it the birth, death date of the person with his name is not enough today in our digital world and especially that each and every kid growing up today for a dozen generations to come would need an actual and realistic hero that one stood ground on this earth with his righteous cause having his own story and special fingerprint on society. Their true right of these fallen martyrs is to be remembered by society, and their righteous right is to actually care for their families, provide for them anything they need because they have taken a share in the sacrifice of a fellow member in their family.
+            The main solution to this issue is to create a website linked to a server that hosts the data of the martyrs. The data will mainly focus around their stories, good deeds, where they grew up, where and how did they die and for what cause they were fighting for. This website will include martyrs during different wars of our beloved Jabal Aamel, each enlisted in the specified war. To support the family of the martyrs, an anonymous donation could be sent to the family of the martyr by accessing the profile of the martyr.
+        </p>
+    </div>
+
+    <script>
+        let isEnglish = true;
+
+        function toggleLanguage() {
+            let textElement = document.getElementById("text");
+
+            if (isEnglish) {
+                textElement.innerHTML = "في كل بلد حول العالم شهد حروبا وحتى منظمات ، أعطى الجميع الأولوية لتذكر أبطالهم الذين سقطوا بأيام الذكرى والأحجار المنحوتة بأسمائهم. يتم عمل هذه النصب التذكارية لتكريم شجاعة وتضحيات الجنود. إنهم يضمنون عدم نسيان أسماء وقصص أولئك الذين قاتلوا وماتوا. تساعد النصب التذكارية في الحفاظ على التاريخ من خلال تزويد الأجيال القادمة باتصال ملموس بالماضي وتذكيرهم بالأحداث والأشخاص الذين شكلوا أمتهم اليوم. ستساعد النصب التذكارية للشهداء الذين سقطوا إلى الأبد في تثقيف وتعليم ما ناضل الشهداء من أجله ، وما هي القضايا الحقيقية والمشروعة التي وقفوا معها ضد الشر واللاإنساني. إنهم بوصلة الناس في أقسى البحار خلال أحلك أحلك الخلاص. يمكن أن يصل عدد الشهداء والضحايا في أي حرب إلى مائة ألف أو ملايين، وهذا يطرح مشكلة كبيرة في الحفاظ على بيانات الأشخاص الذين لقوا حتفهم. بالإضافة إلى ذلك ، فإن وجود لوح حجري مكتوب عليه تاريخ ميلاد ووفاة الشخص باسمه لا يكفي اليوم في عالمنا الرقمي وخاصة أن كل طفل ينشأ اليوم لعشرات الأجيال القادمة سيحتاج إلى بطل حقيقي وواقعي يقف المرء على هذه الأرض بقضيته الصالحة وله قصته الخاصة وبصمة خاصة على المجتمع. حقهم الحقيقي في هؤلاء الشهداء الذين سقطوا هو أن يتذكرهم المجتمع وحقهم الصالح هو الحرص فعليا على أسرهم ، وإعالتهم لأي شيء يحتاجونه لأنهم أخذوا نصيبا في تضحية أحد أفراد أسرهم. الحل الرئيسي لهذه المشكلة هو إنشاء موقع إلكتروني مرتبط بخادم يستضيف بيانات الشهداء. ستركز البيانات بشكل أساسي على قصصهم ، وأعمالهم الصالحة ، وأين نشأوا ، وأين وكيف ماتوا ولأي سبب كانوا يقاتلون من أجله. سيضم هذا الموقع شهداء خلال الحروب المختلفة لحبيبنا جبل عامل كل منهم في الحرب المحددة. لدعم عائلة الشهداء ، يمكن إرسال تبرع مجهول المصدر إلى عائلة الشهيد من خلال الوصول إلى ملف الشهيد.";
+                textElement.style.direction = "rtl"; // Right-to-left for Arabic
+                textElement.style.textAlign = "right";
+            } else {
+                textElement.innerHTML = "In each and every country around the world that had wars and even organizations, all prioritize on remembering their fallen heroes with memorial days and stones sculpted in them their names. These memorials are done to pay tribute to the bravery and sacrifices of soldiers. They ensure that the names and stories of those who fought and died are not forgotten. Memorials help preserve history by providing the future generations with a tangible connection to the past and remind them of the events and people that shaped their nation today. The memorials of the fallen martyrs will eternally help educate and teach what the martyrs fought for, what true and rightful causes they stood with against evil and inhuman. They are the compass of the people in the roughest seas during their darkest hour into salvation.The number of people martyred and casualties in any war could reach a hundred-thousand or millions, this poses a great issue in preserving the data of people that died. In addition, having a stone slab written on it the birth, death date of the person with his name is not enough today in our digital world and especially that each and every kid growing up today for a dozen generations to come would need an actual and realistic hero that one stood ground on this earth with his righteous cause having his own story and special fingerprint on society. Their true right of these fallen martyrs is to be remembered by society, and their righteous right is to actually care for their families, provide for them anything they need because they have taken a share in the sacrifice of a fellow member in their family.The main solution to this issue is to create a website linked to a server that hosts the data of the martyrs. The data will mainly focus around their stories, good deeds, where they grew up, where and how did they die and for what cause they were fighting for. This website will include martyrs during different wars of our beloved Jabal Aamel, each enlisted in the specified war. To support the family of the martyrs, an anonymous donation could be sent to the family of the martyr by accessing the profile of the martyr.";
+                textElement.style.direction = "ltr"; // Left-to-right for English
+                textElement.style.textAlign = "left";
+            }
+
+            isEnglish = !isEnglish; // Toggle language state
+        }
+
+        function logout() {
+            localStorage.removeItem("currentUser");
+            alert("Logged out successfully.");
+            window.location.href = "login.html";
+        }
+
+        function toggleMode() {
+            document.body.classList.toggle("light-mode");
+            document.querySelector("nav").classList.toggle("light-mode");
+        }
+    </script>
+
+</body>
+</html>

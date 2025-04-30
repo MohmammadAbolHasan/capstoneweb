@@ -1,0 +1,448 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Shop - MOASASAT SHAHID</title>
+  <style>
+    /* [CSS stays unchanged — looks solid!] */
+    /* ... your styles remain the same ... */
+    body {
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  background: #f8f9fa;
+  color: #333;
+}
+
+header {
+  background: #0066cc;
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 30px auto;
+  padding: 0 20px;
+}
+
+h2 {
+  font-size: 28px;
+  color: #333;
+  margin: 40px 0 20px;
+  border-bottom: 2px solid #0066cc;
+  display: inline-block;
+  padding-bottom: 5px;
+}
+
+.products {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.product-card {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  width: 250px;
+  padding: 15px;
+  text-align: center;
+  transition: box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.product-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.product-card h3 {
+  margin: 10px 0 5px;
+}
+
+.product-card p {
+  font-weight: bold;
+  margin: 5px 0;
+}
+
+.product-card button {
+  background: #28a745;
+  border: none;
+  color: white;
+  padding: 10px 15px;
+  margin-top: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.product-card button:hover {
+  background: #218838;
+}
+
+.donation {
+  margin-top: 50px;
+  padding: 20px;
+  background: #fff3cd;
+  border: 1px solid #ffeeba;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.donation input {
+  padding: 10px;
+  width: 150px;
+  border: 1px solid #ccc;
+  margin-top: 10px;
+  border-radius: 5px;
+}
+
+.donation button {
+  background: #007bff;
+  border: none;
+  color: white;
+  padding: 10px 15px;
+  margin-left: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.donation button:hover {
+  background: #0056b3;
+}
+
+.cart {
+  margin-top: 40px;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.cart ul {
+  list-style: none;
+  padding: 0;
+}
+
+.cart li {
+  padding: 8px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+#checkoutBtn {
+  display: none;
+  margin-top: 15px;
+  background: #28a745;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#checkoutBtn:hover {
+  background: #218838;
+}
+
+#adminPanel input {
+  display: block;
+  margin-top: 10px;
+  padding: 10px;
+  width: 250px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+#adminPanel button {
+  margin-top: 10px;
+  background: #343a40;
+  color: #fff;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#adminPanel button:hover {
+  background: #23272b;
+}
+
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Support MOASASAT SHAHID</h1>
+    <p>Buy books or pins, or donate to help the cause</p>
+  </header>
+
+  <div class="container">
+
+    <!-- BOOKS -->
+    <h2>Copy Books</h2>
+    <section class="products" id="booksSection">
+      <!-- Dynamically rendered -->
+    </section>
+
+    <!-- PINS -->
+    <h2>Support Pins</h2>
+    <section class="products" id="pinsSection">
+      <!-- Dynamically rendered -->
+    </section>
+
+    <!-- DONATION -->
+    <section class="donation">
+      <h2>Donate to Support</h2>
+      <label for="donationAmount">Amount ($):</label>
+      <input type="number" id="donationAmount" min="1" placeholder="10" />
+      <button onclick="makeDonation()">Donate</button>
+    </section>
+
+    <!-- CART -->
+    <section class="cart" id="cart">
+      <h2>Your Cart</h2>
+      <ul id="cartItems"></ul>
+      <p id="total">Total: $0.00</p>
+    </section>
+
+    <button id="checkoutBtn" onclick="submitPayment()">Proceed to Payment</button>
+
+    <!-- Admin Section -->
+    <div id="adminPanel" style="margin-top: 50px; display: none;">
+      <h2>Admin Panel</h2>
+
+      <h3>Add Copybook</h3>
+      <input type="text" id="bookName" placeholder="Book Name" />
+      <input type="number" id="bookPrice" placeholder="Price" />
+      <input type="text" id="bookImage" placeholder="Image path (e.g., s7.jpeg)" />
+      <button onclick="addNewItem('book')">Add Book</button>
+
+      <h3 style="margin-top:30px;">Add Pin</h3>
+      <input type="text" id="pinName" placeholder="Pin Name" />
+      <input type="number" id="pinPrice" placeholder="Price" />
+      <input type="text" id="pinImage" placeholder="Image path (e.g., pins2.jpg)" />
+      <button onclick="addNewItem('pin')">Add Pin</button>
+    </div>
+
+    <div style="text-align: right; margin: 20px;">
+      <select id="languageSelect" onchange="translatePage()">
+        <option value="en">English</option>
+        <option value="ar">العربية</option>
+      </select>
+    </div>
+    
+
+  </div>
+
+  <script>
+    let isAdmin = true; // Change to false for non-admins
+
+    let cart = [];
+    let total = 0;
+
+    let copybooks = [
+      { name: "Copy Book", price: 5, image: "s1.jpeg" },
+      { name: "Copy Book", price: 5, image: "s2.jpeg" },
+      { name: "Copy Book", price: 5, image: "s3.jpeg" },
+      { name: "Copy Book", price: 5, image: "s4.jpeg" },
+      { name: "Copy Book", price: 5, image: "s5.jpeg" },
+      { name: "Copy Book", price: 5, image: "s6.jpeg" },
+      { name: "Copy Book", price: 5, image: "s7.jpeg" },
+      { name: "Copy Book", price: 5, image: "s8.jpeg" },
+      { name: "Copy Book", price: 5, image: "s9.jpeg" },
+      { name: "Copy Book", price: 5, image: "s10.jpeg" },
+      { name: "Copy Book", price: 5, image: "s11.jpeg" },
+      { name: "Copy Book", price: 5, image: "s12.jpeg" },
+      { name: "Copy Book", price: 5, image: "s13.jpeg" }
+    ];
+
+    let pins = [
+      { name: "Support Pin", price: 3, image: "p1.jpeg" },
+      { name: "Support Pin", price: 3, image: "p2.jpeg" },
+      { name: "Support Pin", price: 3, image: "p3.jpeg" },
+      { name: "Support Pin", price: 3, image: "p4.jpeg" },
+      { name: "Support Pin", price: 3, image: "p5.jpeg" }
+    ];
+
+    function renderProducts() {
+      const booksSection = document.querySelector("#booksSection");
+      const pinsSection = document.querySelector("#pinsSection");
+      const adminPanel = document.getElementById("adminPanel");
+
+      booksSection.innerHTML = "";
+      pinsSection.innerHTML = "";
+
+      if (isAdmin) {
+        adminPanel.style.display = "block";
+      }
+
+      copybooks.forEach((book, index) => {
+        booksSection.innerHTML += `
+          <div class="product-card">
+            <img src="${book.image}" alt="${book.name}">
+            <h3>${book.name}</h3>
+            <p>$${book.price.toFixed(2)}</p>
+            <button onclick="addToCart('${book.name}', ${book.price})">Add to Cart</button>
+            ${isAdmin ? `<button style="margin-top: 10px; background: #dc3545" onclick="deleteCopybook(${index})">Delete</button>` : ""}
+          </div>`;
+      });
+
+      pins.forEach((pin, index) => {
+        pinsSection.innerHTML += `
+          <div class="product-card">
+            <img src="${pin.image}" alt="${pin.name}">
+            <h3>${pin.name}</h3>
+            <p>$${pin.price.toFixed(2)}</p>
+            <button onclick="addToCart('${pin.name}', ${pin.price})">Add to Cart</button>
+            ${isAdmin ? `<button style="margin-top: 10px; background: #dc3545" onclick="deletePin(${index})">Delete</button>` : ""}
+          </div>`;
+      });
+    }
+
+    function addToCart(item, price) {
+      cart.push({ item, price });
+      updateCart();
+    }
+
+    function updateCart() {
+      const cartItems = document.getElementById('cartItems');
+      const totalDisplay = document.getElementById('total');
+      const checkoutButton = document.getElementById('checkoutBtn');
+      cartItems.innerHTML = '';
+      total = 0;
+
+      cart.forEach((entry) => {
+        const li = document.createElement('li');
+        li.textContent = `${entry.item} - $${entry.price.toFixed(2)}`;
+        cartItems.appendChild(li);
+        total += entry.price;
+      });
+
+      totalDisplay.textContent = `Total: $${total.toFixed(2)}`;
+      checkoutButton.style.display = cart.length > 0 ? 'block' : 'none';
+    }
+
+    function submitPayment() {
+      if (cart.length === 0) {
+        alert("Your cart is empty.");
+        return;
+      }
+
+      let summary = "Your order:\n";
+      cart.forEach(item => {
+        summary += `- ${item.item}: $${item.price.toFixed(2)}\n`;
+      });
+      summary += `Total: $${total.toFixed(2)}`;
+
+      alert("Payment Sent!\n\n" + summary);
+
+      cart = [];
+      updateCart();
+    }
+
+    function makeDonation() {
+      const amount = parseFloat(document.getElementById('donationAmount').value);
+      if (isNaN(amount) || amount <= 0) {
+        alert("Please enter a valid donation amount.");
+        return;
+      }
+
+      const phoneNumber = "96170129100";
+      const message = `Hello, I would like to donate $${amount} to support the MOASASAT SHAHID.`;
+
+      const whatsappLink = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+      window.open(whatsappLink, '_blank');
+
+      cart.push({ item: "Donation via WhatsApp", price: amount });
+      updateCart();
+      document.getElementById('donationAmount').value = '';
+    }
+
+    function deleteCopybook(index) {
+      copybooks.splice(index, 1);
+      renderProducts();
+    }
+
+    function deletePin(index) {
+      pins.splice(index, 1);
+      renderProducts();
+    }
+
+    function addNewItem(type) {
+      const name = document.getElementById(`${type}Name`).value;
+      const price = parseFloat(document.getElementById(`${type}Price`).value);
+      const image = document.getElementById(`${type}Image`).value;
+
+      if (!name || isNaN(price) || !image) {
+        alert("Fill in all fields correctly.");
+        return;
+      }
+
+      const newItem = { name, price, image };
+
+      if (type === "book") copybooks.push(newItem);
+      if (type === "pin") pins.push(newItem);
+
+      renderProducts();
+
+      document.getElementById(`${type}Name`).value = "";
+      document.getElementById(`${type}Price`).value = "";
+      document.getElementById(`${type}Image`).value = "";
+    }
+
+    const translations = {
+  ar: {
+    title: "ادعم مؤسسة الشهيد",
+    subtitle: "اشترِ كتبًا أو دبابيس أو تبرع لدعم القضية",
+    addToCart: "أضف إلى السلة",
+    donateBtn: "تبرع",
+    adminPanel: "لوحة التحكم",
+    addBook: "أضف دفتر",
+    addPin: "أضف دبوس",
+    yourCart: "سلتك",
+    total: "الإجمالي",
+    proceed: "المتابعة للدفع",
+    donateSection: "تبرع لدعم",
+    amount: "المبلغ ($):",
+  },
+  en: {
+    title: "Support MOASASAT SHAHID",
+    subtitle: "Buy books or pins, or donate to help the cause",
+    addToCart: "Add to Cart",
+    donateBtn: "Donate",
+    adminPanel: "Admin Panel",
+    addBook: "Add Copybook",
+    addPin: "Add Pin",
+    yourCart: "Your Cart",
+    total: "Total",
+    proceed: "Proceed to Payment",
+    donateSection: "Donate to Support",
+    amount: "Amount ($):",
+  }
+};
+
+function translatePage() {
+  const selectedLang = document.getElementById("languageSelect").value;
+  const elements = document.querySelectorAll("[data-translate]");
+
+  elements.forEach(el => {
+    const key = el.getAttribute("data-translate");
+    if (translations[selectedLang][key]) {
+      el.textContent = translations[selectedLang][key];
+    }
+  });
+
+  document.body.dir = selectedLang === "ar" ? "rtl" : "ltr";
+}
+
+
+    window.onload = renderProducts;
+  </script>
+</body>
+</html>

@@ -1,0 +1,505 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAIN DASHBOARD</title>
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        /* Light & Dark Mode */
+        body.dark-mode {
+            background-color: #121212;
+            color: white;
+        }
+
+        body.light-mode {
+            background-color: white;
+            color: black;
+        }
+
+        /* Navigation Bar */
+        nav {
+            background-color: #333;
+            padding: 15px 20px;
+            font-size: 24px;
+            text-align: center;
+            font-weight: bold;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+
+        nav a {
+            font-size: 16px;
+            margin-left: 15px;
+            text-decoration: none;
+            color: #f8c102;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        /* Buttons */
+        nav button {
+            background-color: #f8c102;
+            color: black;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+
+        nav button:hover {
+            background-color: #e6b800;
+        }
+
+        /* Search Bar */
+        .search-container {
+            text-align: center;
+            margin-top: 80px;
+        }
+
+        #searchInput {
+            width: 50%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+            color: black;
+        }
+
+        /* Profile Section */
+        .profile-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+            gap: 20px;
+        }
+
+        /* Individual Profile */
+        .profile {
+            text-align: center;
+            display: none; /* Hidden by default, will show after filtering */
+        }
+
+        /* Profile Image */
+        .profile img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #f8c102;
+            box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .profile img:hover {
+            transform: scale(1.1);
+        }
+
+        /* Profile Name */
+        .profile p {
+            margin-top: 10px;
+            font-size: 18px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .profile-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .profile img {
+                width: 100px;
+                height: 100px;
+            }
+
+            .profile p {
+                font-size: 16px;
+            }
+        }
+        .add-person {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    background-color: #f8c102;
+    color: white;
+    font-size: 30px;
+    font-weight: bold;
+    text-align: center;
+    line-height: 50px;
+    border-radius: 50%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: transform 0.2s, background 0.3s;
+}
+
+.add-person:hover {
+    background-color: #e6b800;
+    transform: scale(1.1);
+}
+
+
+        /* Profile Container */
+        .profile-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 80px;
+            gap: 20px;
+        }
+        .modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    z-index: 1000;
+}
+
+.dark-mode .modal {
+    background: #333;
+    color: white;
+}
+
+.modal h3 {
+    margin-bottom: 15px;
+    font-size: 18px;
+}
+
+.modal input {
+    width: 100%;
+    padding: 8px;
+    margin: 5px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.dark-mode .modal input {
+    background: #222;
+    color: white;
+    border: 1px solid #555;
+}
+
+.modal button {
+    background: #f8c102;
+    color: black;
+    border: none;
+    padding: 8px 12px;
+    margin-top: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+    width: 100px;
+}
+
+.modal button:hover {
+    background: #e6b800;
+}
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    z-index: 999;
+}
+.profile {
+    position: relative;
+    display: inline-block;
+}
+
+.favorite {
+    position: absolute;
+    top: 10px; /* Adjust to position behind the image */
+    left: 10px;
+    font-size: 28px;
+    color: gray; /* Default heart color */
+    cursor: pointer;
+    transition: color 0.3s, transform 0.2s;
+    z-index: 1;
+}
+
+.favorite.active {
+    color: red; /* Favorite heart color */
+}
+
+.favorite:hover {
+    transform: scale(1.2);
+}
+
+
+
+
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav>
+        <span id="title">SHUHADAONA / شهدائنا</span>
+        <a href="shop.html" id="shop-link">Shop</a>
+        <a href="about.html" id="about-link">About Us</a>
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSc1FgDtKzz-buuhN_gWKkBCl9gXk0LG-RVq9oZP9LeSSwX_6g/viewform?usp=header" target="_blank">Submit a Form</a>
+        <button onclick="toggleDarkMode()">🌙 / ☀️</button>
+        <button onclick="toggleLanguage()">🇺🇸 English / 🇸🇦 العربية</button>
+        <button onclick="logout()">Logout</button>
+    </nav>
+
+    <!-- Search Bar -->
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Search by name..." onkeyup="searchPerson()">
+    </div>
+
+    <!-- Profile Pictures Section -->
+    <div class="profile-container">
+        <div class="profile" data-name="Rachid Hamadeh">
+            <div class="favorite" onclick="toggleFavorite(this)">&#x2665;</div>
+            <a href="profile1.html">
+                <img src="img2.jpg" alt="Rachid Hamadeh">
+            </a>
+            <p class="name">AL_SHAHID Rachid Hamadeh</p>
+        </div>
+        <div class="profile" data-name="Hasan Chaito">
+            <div class="favorite" onclick="toggleFavorite(this)">&#x2665;</div>
+            <a href="profile2.html">
+                <img src="img1.jpg" alt="Hasan Chaito">
+            </a>
+            <p class="name">AL_SHAHID Hasan Chaito</p>
+        </div>
+        <div class="profile" data-name="Ali Fawzi Ayoub">
+            <div class="favorite" onclick="toggleFavorite(this)">&#x2665;</div>
+            <a href="profile3.html">
+                <img src="img3.jpeg" alt="Ali Fawzi Ayoub">
+            </a>
+            <p class="name">AL_SHAHID Ali Fawzi Ayoub</p>
+        </div>
+        <div class="profile" data-name="Wael Ayoub">
+            <div class="favorite" onclick="toggleFavorite(this)">&#x2665;</div>
+            <a href="profile4.html">
+                <img src="img4.jpeg" alt="Wael Ayoub">
+            </a>
+            <p class="name">AL_SHAHID Wael Ayoub</p>
+        </div>
+        <div class="profile" data-name="Adham Khanjar Hussein Nasser">
+            <div class="favorite" onclick="toggleFavorite(this)">&#x2665;</div>
+            <a href="profile5.html">
+                <img src="img5.jpeg" alt="Adham Khanjar Hussein Nasser">
+            </a>
+            <p class="name">AL_SHAHID Adham Khanjar Hussein Nasser</p>
+        </div>
+    </div>
+    <div class="add-person" id="addPersonBtn" onclick="openModal()" style="display: none;">+</div>
+
+    <div class="modal" id="addPersonModal">
+        <h3>Add Person</h3>
+        <input type="text" id="personName" placeholder="Enter name">
+        <input type="file" id="personImage" accept="image/*">
+        <button onclick="savePerson()">Save</button>
+        <button onclick="closeModal()">Cancel</button>
+    </div>
+    
+
+    
+
+    
+   
+
+    <script>
+        // Load Dark/Light Mode from Local Storage
+        function loadTheme() {
+            const mode = localStorage.getItem("theme") || "light-mode";
+            document.body.classList.add(mode);
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle("dark-mode");
+            document.body.classList.toggle("light-mode");
+            localStorage.setItem("theme", document.body.classList.contains("dark-mode") ? "dark-mode" : "light-mode");
+        }
+
+        let isEnglish = true;
+        function toggleLanguage() {
+            let profiles = document.querySelectorAll(".name");
+            let title = document.getElementById("title");
+            let shop = document.getElementById("shop-link");
+            let aboutLink = document.getElementById("about-link");
+            let searchInput = document.getElementById("searchInput");
+
+            if (isEnglish) {
+                title.innerText = "شهدائنا";
+                shop.innerText = "متجر";
+                aboutLink.innerText = "معلومات عنا";
+                searchInput.placeholder = "ابحث عن الاسم...";
+                profiles[0].innerText = "الشهيد رشيد يحيى حمادة";
+                profiles[1].innerText = "الشهيد حسن موسى شعيتو";
+                profiles[2].innerText = "الشهيد علي فوزي أيوب";
+                profiles[3].innerText = "الشهيد وائل أيوب";
+                profiles[4].innerText = "الشهيد أدهم خنجر حسين ناصر";
+            } else {
+                title.innerText = "SHUHADAONA";
+                shop.innerText = "Shop";
+                aboutLink.innerText = "About Us";
+                searchInput.placeholder = "Search by name...";
+                profiles[0].innerText = "AL_SHAHID Rachid Hamadeh";
+                profiles[1].innerText = "AL_SHAHID Hasan Chaito";
+                profiles[2].innerText = "AL_SHAHID Ali Fawzi Ayoub";
+                profiles[3].innerText = "AL_SHAHID Wael Ayoub";
+                profiles[4].innerText = "AL_SHAHID Adham Khanjar Hussein Nasser";
+            }
+            isEnglish = !isEnglish;
+        }
+
+        function searchPerson() {
+            let input = document.getElementById("searchInput").value.toLowerCase();
+            let profiles = document.querySelectorAll(".profile");
+
+            profiles.forEach(profile => {
+                let name = profile.getAttribute("data-name").toLowerCase();
+                profile.style.display = name.includes(input) ? "block" : "none";
+            });
+        }
+
+        function logout() {
+            localStorage.removeItem("currentUser");
+            alert("Logged out successfully.");
+            window.location.href = "login.html";
+        }
+
+        loadTheme();
+
+          // Check user role and show the Add Person button if Admin or Developer
+          function checkUserRole() {
+            const currentUser = localStorage.getItem("currentUser");
+            if (currentUser && (currentUser.includes("@mu.edu.lb") || currentUser.includes("@gmail.admin.com"))) {
+                document.getElementById("addPersonBtn").style.display = "flex";
+            }
+        }
+
+
+        checkUserRole();
+        document.body.classList.add(localStorage.getItem("theme") || "light-mode");
+
+        document.addEventListener("DOMContentLoaded", function () {
+    let userRole = localStorage.getItem("role"); // "admin", "developer", or "user"
+
+    // Show "Add Person" button only for admins & developers
+    if (userRole === "admin" || userRole === "developer") {
+        document.getElementById("addPersonBtn").style.display = "block";
+    }
+
+    loadPersons(); // Load saved persons on page load
+});
+
+function openModal() {
+    document.getElementById("addPersonModal").style.display = "block";
+}
+
+function closeModal() {
+    document.getElementById("addPersonModal").style.display = "none";
+}
+
+function savePerson() {
+    let name = document.getElementById("personName").value;
+    let imageFile = document.getElementById("personImage").files[0];
+
+    if (!name || !imageFile) {
+        alert("Please enter a name and select an image.");
+        return;
+    }
+
+    let reader = new FileReader();
+    reader.onload = function (e) {
+        let newPerson = { name: name, image: e.target.result };
+        let persons = JSON.parse(localStorage.getItem("persons")) || [];
+        persons.push(newPerson);
+        localStorage.setItem("persons", JSON.stringify(persons));
+
+        displayPerson(newPerson);
+        closeModal();
+    };
+    reader.readAsDataURL(imageFile);
+}
+
+function displayPerson(person) {
+    let profileContainer = document.getElementById("profileContainer");
+    let profile = document.createElement("div");
+    profile.classList.add("profile");
+    profile.innerHTML = `
+        <a href="#"><img src="${person.image}" alt="${person.name}"></a>
+        <p>${person.name}</p>
+    `;
+    profileContainer.appendChild(profile);
+}
+
+function loadPersons() {
+    let persons = JSON.parse(localStorage.getItem("persons")) || [];
+    persons.forEach(displayPerson);
+}
+
+function toggleFavorite(element) {
+    element.classList.toggle("active");
+
+    const name = element.parentElement.getAttribute("data-name");
+    let favorites = JSON.parse(localStorage.getItem("favorites")) || {};
+
+    if (favorites[name]) {
+        delete favorites[name]; // Remove favorite
+    } else {
+        favorites[name] = true; // Add favorite
+    }
+
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+}
+document.addEventListener("DOMContentLoaded", function () {
+    let favorites = JSON.parse(localStorage.getItem("favorites")) || {};
+    document.querySelectorAll(".profile").forEach(profile => {
+        let name = profile.getAttribute("data-name");
+        let heart = profile.querySelector(".favorite");
+        if (favorites[name]) {
+            heart.classList.add("active");
+        }
+    });
+});
+
+
+
+
+
+
+
+        
+
+    </script>
+    
+
+</body>
+</html>

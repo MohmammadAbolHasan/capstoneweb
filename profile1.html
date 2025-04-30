@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Profile Page</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: rgb(71, 61, 9);
+    }
+
+    .profile-header {
+      background-image: url('img2.jpg');
+      background-size: cover;
+      background-position: top;
+      color: white;
+      padding: 60px 20px;
+      text-align: center;
+    }
+
+    .profile-header h1 {
+      margin: 0;
+      font-size: 36px;
+      font-weight: bold;
+    }
+
+    .info-box {
+      background-color: rgba(0, 0, 0, 0.6);
+      display: inline-block;
+      padding: 10px 20px;
+      border-radius: 10px;
+      margin-top: 10px;
+    }
+
+    .info-box p {
+      margin: 5px;
+      color: #f1f1f1;
+    }
+
+    #map {
+      height: 400px;
+      width: 100%;
+    }
+
+    .quote {
+      background-color: rgba(0, 0, 0, 0.6);
+      display: inline-block;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-style: italic;
+      margin-top: 10px;
+      font-size: 18px;
+    }
+
+    .post-form {
+      background: white;
+      padding: 20px;
+      margin: 20px auto;
+      max-width: 600px;
+      border-radius: 10px;
+    }
+
+    .post-form textarea {
+      width: 100%;
+      height: 80px;
+      resize: none;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    .post-form input[type="file"] {
+      margin-top: 10px;
+    }
+
+    .post-form button {
+      margin-top: 10px;
+      padding: 10px 15px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .post {
+      background: white;
+      margin: 20px auto;
+      max-width: 600px;
+      border-radius: 10px;
+      padding: 15px;
+    }
+
+    .post p {
+      margin: 10px 0;
+    }
+
+    .post img, .post video {
+      max-width: 100%;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+
+    .post .actions {
+      margin-top: 10px;
+    }
+
+    .post .actions button {
+      background: none;
+      border: none;
+      color: #007bff;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+
+    .comment-box {
+      margin-top: 10px;
+    }
+
+    .comment-box input {
+      width: 100%;
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    .comments {
+      margin-top: 10px;
+      padding-left: 10px;
+    }
+
+    .comments p {
+      margin: 5px 0;
+    }
+
+    .reply {
+      padding-left: 15px;
+      border-left: 2px solid #eee;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="profile-header">
+    <h1>الشهيد رشيد حمادي</h1>
+    <div class="info-box">
+      <p>Date of Martyrdom: Nov 13, 2024</p>
+      <p>Place of Martyrdom: Aramon, Lebanon</p>
+      <p>Place of Burial: Rawdat Al-Hawraa Zeinab / روضة الحوراء زينب</p>
+    </div>
+    <div class="quote">"رشيد شهيد سعيد بحق..."</div>
+  </div>
+
+  <h3 style="text-align:center; color:white;">Rawdat Al-Hawraa Zeinab Location</h3>
+  <div id="map"></div>
+
+  <div class="post-form">
+    <textarea id="postText" placeholder="What's on your mind?"></textarea>
+    <input type="file" id="postFile" accept="image/*,video/*" />
+    <button onclick="submitPost()">Post</button>
+  </div>
+
+  <div id="postsContainer"></div>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    const map = L.map('map').setView([33.8484, 35.5149], 15);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: 'Map data © OpenStreetMap contributors',
+    }).addTo(map);
+    L.marker([33.8484, 35.5149])
+      .addTo(map)
+      .bindPopup('Rawdat Al-Hawraa Zeinab')
+      .openPopup();
+
+    let posts = [];
+
+    function submitPost() {
+      const text = document.getElementById('postText').value;
+      const fileInput = document.getElementById('postFile');
+      let fileURL = '';
+      let fileType = '';
+
+      if (fileInput.files[0]) {
+        fileURL = URL.createObjectURL(fileInput.files[0]);
+        fileType = fileInput.files[0].type.startsWith('video') ? 'video' : 'image';
+      }
+
+      if (text || fileURL) {
+        posts.unshift({
+          text,
+          fileURL,
+          fileType,
+          likes: 0,
+          liked: false,
+          comments: [],
+        });
+        document.getElementById('postText').value = '';
+        fileInput.value = '';
+        renderPosts();
+      }
+    }
+
+    function renderPosts() {
+      const container = document.getElementById('postsContainer');
+      container.innerHTML = '';
+
+      posts.forEach((post, index) => {
+        const postEl = document.createElement('div');
+        postEl.className = 'post';
+
+        let content = `
+          <p contenteditable="false" id="text${index}">${post.text}</p>
+          ${post.fileURL ? (post.fileType === 'image' ?
+            `<img src="${post.fileURL}" />` :
+            `<video controls src="${post.fileURL}"></video>`) : ''}
+          <div class="actions">
+            <button onclick="toggleLike(${index})">${post.liked ? '❤️ Unlike' : '👍 Like'} (${post.likes})</button>
+            <button onclick="toggleEdit(${index})">✏️ Edit</button>
+            <button onclick="deletePost(${index})">🗑️ Delete</button>
+          </div>
+          <div class="comment-box">
+            <input type="text" placeholder="Write a comment..." onkeydown="submitComment(event, ${index})"/>
+          </div>
+          <div class="comments" id="comments${index}">
+            ${post.comments.map((c, i) => `
+              <p>${c.text}
+                <button onclick="deleteComment(${index}, ${i})">❌</button>
+                <button onclick="replyToComment(${index}, ${i})">↪️ Reply</button>
+                ${c.reply ? `<div class="reply">${c.reply} <button onclick="removeReply(${index}, ${i})">❌</button></div>` : ''}
+              </p>
+            `).join('')}
+          </div>
+        `;
+        postEl.innerHTML = content;
+        container.appendChild(postEl);
+      });
+    }
+
+    function toggleLike(i) {
+      posts[i].liked = !posts[i].liked;
+      posts[i].likes += posts[i].liked ? 1 : -1;
+      renderPosts();
+    }
+
+    function deletePost(i) {
+      posts.splice(i, 1);
+      renderPosts();
+    }
+
+    function toggleEdit(i) {
+      const p = document.getElementById(`text${i}`);
+      if (p.contentEditable === "true") {
+        posts[i].text = p.innerText;
+        p.contentEditable = "false";
+      } else {
+        p.contentEditable = "true";
+        p.focus();
+      }
+    }
+
+    function submitComment(e, i) {
+      if (e.key === "Enter") {
+        posts[i].comments.push({ text: e.target.value, reply: null });
+        e.target.value = '';
+        renderPosts();
+      }
+    }
+
+    function deleteComment(postIndex, commentIndex) {
+      posts[postIndex].comments.splice(commentIndex, 1);
+      renderPosts();
+    }
+
+    function replyToComment(postIndex, commentIndex) {
+      const reply = prompt("Your reply:");
+      if (reply) {
+        posts[postIndex].comments[commentIndex].reply = reply;
+        renderPosts();
+      }
+    }
+
+    function removeReply(postIndex, commentIndex) {
+      posts[postIndex].comments[commentIndex].reply = null;
+      renderPosts();
+    }
+  </script>
+</body>
+</html>
