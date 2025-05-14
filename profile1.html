@@ -2,182 +2,488 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Profile Page</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile - الشهيد رشيد حمادي</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background-color: rgb(71, 61, 9);
+    :root {
+      --primary: #8B0000; /* Dark red for martyr theme */
+      --secondary: #1a1a1a;
+      --accent: #D4AF37; /* Gold accent */
+      --light: #f5f5f5;
+      --dark: #121212;
+      --text-light: #ffffff;
+      --text-dark: #333333;
+      --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
     }
 
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--secondary);
+      color: var(--text-light);
+      line-height: 1.6;
+    }
+
+    /* Header Section */
     .profile-header {
-      background-image: url('img2.jpg');
-      background-size: cover;
-      background-position: top;
-      color: white;
-      padding: 60px 20px;
+      position: relative;
+      height: 400px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding-bottom: 2rem;
+    }
+
+    .profile-header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.4));
+      z-index: 1;
+    }
+
+    .profile-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+    }
+
+    .profile-content {
+      position: relative;
+      z-index: 2;
+      padding: 0 2rem;
       text-align: center;
     }
 
-    .profile-header h1 {
-      margin: 0;
-      font-size: 36px;
-      font-weight: bold;
+    .profile-content h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: var(--text-light);
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
     }
 
     .info-box {
-      background-color: rgba(0, 0, 0, 0.6);
+      background-color: rgba(0, 0, 0, 0.7);
       display: inline-block;
-      padding: 10px 20px;
+      padding: 1rem 2rem;
       border-radius: 10px;
-      margin-top: 10px;
+      margin: 1rem 0;
+      border-left: 4px solid var(--accent);
     }
 
     .info-box p {
-      margin: 5px;
-      color: #f1f1f1;
+      margin: 0.5rem 0;
+      color: var(--text-light);
+      font-size: 1rem;
+    }
+
+    .quote {
+      font-style: italic;
+      font-size: 1.2rem;
+      margin: 1rem 0;
+      color: var(--accent);
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Map Section */
+    .map-section {
+      padding: 2rem;
+      background-color: var(--dark);
+    }
+
+    .map-section h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: var(--accent);
+      font-size: 1.8rem;
     }
 
     #map {
       height: 400px;
       width: 100%;
-    }
-
-    .quote {
-      background-color: rgba(0, 0, 0, 0.6);
-      display: inline-block;
-      padding: 10px 20px;
       border-radius: 10px;
-      font-style: italic;
-      margin-top: 10px;
-      font-size: 18px;
+      box-shadow: var(--shadow);
+      border: 2px solid var(--accent);
     }
 
+    /* Posts Section */
+    .content-section {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    /* Post Form */
     .post-form {
-      background: white;
-      padding: 20px;
-      margin: 20px auto;
-      max-width: 600px;
+      background: var(--dark);
+      padding: 1.5rem;
       border-radius: 10px;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .post-form textarea {
       width: 100%;
-      height: 80px;
+      height: 100px;
       resize: none;
-      padding: 10px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
+      padding: 1rem;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background-color: var(--secondary);
+      color: var(--text-light);
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      transition: var(--transition);
     }
 
-    .post-form input[type="file"] {
-      margin-top: 10px;
+    .post-form textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.3);
+    }
+
+    .file-upload {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .file-upload label {
+      background-color: var(--primary);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: var(--transition);
+    }
+
+    .file-upload label:hover {
+      background-color: #6d0000;
+    }
+
+    .file-upload input[type="file"] {
+      display: none;
+    }
+
+    .file-name {
+      margin-left: 1rem;
+      color: var(--text-light);
+      font-size: 0.9rem;
     }
 
     .post-form button {
-      margin-top: 10px;
-      padding: 10px 15px;
-      background: #007bff;
-      color: white;
+      padding: 0.8rem 1.5rem;
+      background-color: var(--accent);
+      color: var(--secondary);
       border: none;
       border-radius: 5px;
+      font-weight: 600;
       cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
 
+    .post-form button:hover {
+      background-color: #c9a227;
+      transform: translateY(-2px);
+    }
+
+    /* Posts */
     .post {
-      background: white;
-      margin: 20px auto;
-      max-width: 600px;
+      background: var(--dark);
       border-radius: 10px;
-      padding: 15px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .post p {
-      margin: 10px 0;
+      margin-bottom: 1rem;
+      line-height: 1.6;
     }
 
-    .post img, .post video {
-      max-width: 100%;
+    .post-media {
+      margin: 1rem 0;
       border-radius: 8px;
-      margin-top: 10px;
+      overflow: hidden;
     }
 
-    .post .actions {
-      margin-top: 10px;
+    .post-media img, .post-media video {
+      width: 100%;
+      max-height: 500px;
+      object-fit: contain;
+      border-radius: 8px;
     }
 
-    .post .actions button {
+    .post-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .post-actions button {
       background: none;
       border: none;
-      color: #007bff;
-      margin-right: 10px;
+      color: var(--text-light);
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      transition: var(--transition);
     }
 
-    .comment-box {
-      margin-top: 10px;
+    .post-actions button:hover {
+      color: var(--accent);
     }
 
-    .comment-box input {
-      width: 100%;
-      padding: 8px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
+    .post-actions button.liked {
+      color: var(--primary);
+    }
+
+    .comment-section {
+      margin-top: 1rem;
+    }
+
+    .comment-input {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .comment-input input {
+      flex: 1;
+      padding: 0.8rem;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background-color: var(--secondary);
+      color: var(--text-light);
+    }
+
+    .comment-input button {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 0 1rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .comment-input button:hover {
+      background-color: #6d0000;
     }
 
     .comments {
-      margin-top: 10px;
-      padding-left: 10px;
+      margin-top: 1rem;
     }
 
-    .comments p {
-      margin: 5px 0;
+    .comment {
+      margin-bottom: 0.5rem;
+      padding: 0.8rem;
+      background-color: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+    }
+
+    .comment-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 0.5rem;
+      font-size: 0.8rem;
+    }
+
+    .comment-actions button {
+      background: none;
+      border: none;
+      color: var(--text-light);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .comment-actions button:hover {
+      color: var(--accent);
     }
 
     .reply {
-      padding-left: 15px;
-      border-left: 2px solid #eee;
-      margin-top: 5px;
+      margin-left: 1.5rem;
+      padding-left: 1rem;
+      border-left: 2px solid var(--accent);
+      margin-top: 0.5rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .profile-header {
+        height: 350px;
+      }
+      
+      .profile-content h1 {
+        font-size: 2rem;
+      }
+      
+      .info-box {
+        padding: 0.8rem 1.5rem;
+      }
+      
+      .map-section, .content-section {
+        padding: 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .profile-header {
+        height: 300px;
+      }
+      
+      .profile-content h1 {
+        font-size: 1.8rem;
+      }
+      
+      .info-box p {
+        font-size: 0.9rem;
+      }
+      
+      .quote {
+        font-size: 1rem;
+      }
+      
+      .post-actions {
+        flex-wrap: wrap;
+      }
+    }
+
+    /* Animation */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .post {
+      animation: fadeIn 0.3s ease-out;
     }
   </style>
 </head>
 <body>
 
+  <!-- Header Section -->
   <div class="profile-header">
-    <h1>الشهيد رشيد حمادي</h1>
-    <div class="info-box">
-      <p>Date of Martyrdom: Nov 13, 2024</p>
-      <p>Place of Martyrdom: Aramon, Lebanon</p>
-      <p>Place of Burial: Rawdat Al-Hawraa Zeinab / روضة الحوراء زينب</p>
+    <img src="img2.jpg" alt="الشهيد رشيد حمادي" class="profile-bg">
+    <div class="profile-content">
+      <h1>الشهيد رشيد حمادي</h1>
+      <div class="info-box">
+        <p><i class="fas fa-calendar-alt"></i> تاريخ الاستشهاد: 13 نوفمبر 2024</p>
+        <p><i class="fas fa-map-marker-alt"></i> مكان الاستشهاد: عرمون، لبنان</p>
+        <p><i class="fas fa-kaaba"></i> مكان الدفن: روضة الحوراء زينب</p>
+      </div>
+      <div class="quote">"رشيد شهيد سعيد بحق..."</div>
     </div>
-    <div class="quote">"رشيد شهيد سعيد بحق..."</div>
   </div>
 
-  <h3 style="text-align:center; color:white;">Rawdat Al-Hawraa Zeinab Location</h3>
-  <div id="map"></div>
-
-  <div class="post-form">
-    <textarea id="postText" placeholder="What's on your mind?"></textarea>
-    <input type="file" id="postFile" accept="image/*,video/*" />
-    <button onclick="submitPost()">Post</button>
+  <!-- Map Section -->
+  <div class="map-section">
+    <h2><i class="fas fa-map-marked-alt"></i> موقع روضة الحوراء زينب</h2>
+    <div id="map"></div>
   </div>
 
-  <div id="postsContainer"></div>
+  <!-- Content Section -->
+  <div class="content-section">
+    <!-- Post Form -->
+    <div class="post-form">
+      <textarea id="postText" placeholder="شاركنا ذكرياتك عن الشهيد..."></textarea>
+      <div class="file-upload">
+        <label for="postFile"><i class="fas fa-camera"></i> إضافة صورة/فيديو</label>
+        <input type="file" id="postFile" accept="image/*,video/*" />
+        <span class="file-name" id="fileName"></span>
+      </div>
+      <button onclick="submitPost()"><i class="fas fa-paper-plane"></i> نشر</button>
+    </div>
+
+    <!-- Posts Container -->
+    <div id="postsContainer"></div>
+  </div>
 
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script>
+    // Initialize map
     const map = L.map('map').setView([33.8484, 35.5149], 15);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: 'Map data © OpenStreetMap contributors',
     }).addTo(map);
-    L.marker([33.8484, 35.5149])
+    
+    // Add custom martyr icon
+    const martyrIcon = L.icon({
+      iconUrl: 'https://cdn-icons-png.flaticon.com/512/3261/3261910.png',
+      iconSize: [40, 40],
+      iconAnchor: [20, 40],
+      popupAnchor: [0, -40]
+    });
+    
+    L.marker([33.8484, 35.5149], {icon: martyrIcon})
       .addTo(map)
-      .bindPopup('Rawdat Al-Hawraa Zeinab')
+      .bindPopup(`
+        <b>روضة الحوراء زينب</b><br>
+        مكان دفن الشهيد رشيد حمادي<br>
+        <small>إضغط للإحداثيات: 33.8484°N, 35.5149°E</small>
+      `)
       .openPopup();
 
-    let posts = [];
+    // Show selected file name
+    document.getElementById('postFile').addEventListener('change', function(e) {
+      const fileName = e.target.files[0] ? e.target.files[0].name : '';
+      document.getElementById('fileName').textContent = fileName;
+    });
 
+    // Posts data
+    let posts = [
+      {
+        text: "كان رشيد مثالاً للشجاعة والإيمان. لن ننسى تضحيته أبداً.",
+        fileURL: "",
+        fileType: "",
+        likes: 24,
+        liked: false,
+        comments: [
+          { text: "الله يرحمه ويجعل مثواه الجنة", reply: "آمين يا رب" },
+          { text: "كان زميلاً عظيماً في المدرسة", reply: null }
+        ]
+      },
+      {
+        text: "هذه الصورة الأخيرة لرشيد قبل استشهاده",
+        fileURL: "martyr-image.jpg",
+        fileType: "image",
+        likes: 56,
+        liked: true,
+        comments: [
+          { text: "بطل حقيقي", reply: null }
+        ]
+      }
+    ];
+
+    // Submit new post
     function submitPost() {
       const text = document.getElementById('postText').value;
       const fileInput = document.getElementById('postFile');
@@ -200,10 +506,14 @@
         });
         document.getElementById('postText').value = '';
         fileInput.value = '';
+        document.getElementById('fileName').textContent = '';
         renderPosts();
+      } else {
+        alert("الرجاء إدخال نص أو صورة/فيديو");
       }
     }
 
+    // Render all posts
     function renderPosts() {
       const container = document.getElementById('postsContainer');
       container.innerHTML = '';
@@ -212,34 +522,64 @@
         const postEl = document.createElement('div');
         postEl.className = 'post';
 
-        let content = `
-          <p contenteditable="false" id="text${index}">${post.text}</p>
-          ${post.fileURL ? (post.fileType === 'image' ?
-            `<img src="${post.fileURL}" />` :
-            `<video controls src="${post.fileURL}"></video>`) : ''}
-          <div class="actions">
-            <button onclick="toggleLike(${index})">${post.liked ? '❤️ Unlike' : '👍 Like'} (${post.likes})</button>
-            <button onclick="toggleEdit(${index})">✏️ Edit</button>
-            <button onclick="deletePost(${index})">🗑️ Delete</button>
+        let mediaContent = '';
+        if (post.fileURL) {
+          if (post.fileType === 'image') {
+            mediaContent = `<div class="post-media"><img src="${post.fileURL}" alt="Post image"></div>`;
+          } else {
+            mediaContent = `<div class="post-media"><video controls src="${post.fileURL}"></video></div>`;
+          }
+        }
+
+        let commentsHTML = '';
+        if (post.comments.length > 0) {
+          commentsHTML = '<div class="comments">';
+          post.comments.forEach((comment, commentIndex) => {
+            commentsHTML += `
+              <div class="comment">
+                <p>${comment.text}</p>
+                <div class="comment-actions">
+                  <button onclick="deleteComment(${index}, ${commentIndex})"><i class="fas fa-trash"></i> حذف</button>
+                  <button onclick="replyToComment(${index}, ${commentIndex})"><i class="fas fa-reply"></i> رد</button>
+                </div>
+                ${comment.reply ? `
+                <div class="reply">
+                  <p>${comment.reply}</p>
+                  <button onclick="removeReply(${index}, ${commentIndex})"><i class="fas fa-trash"></i> حذف الرد</button>
+                </div>` : ''}
+              </div>
+            `;
+          });
+          commentsHTML += '</div>';
+        }
+
+        postEl.innerHTML = `
+          <p>${post.text}</p>
+          ${mediaContent}
+          <div class="post-actions">
+            <button class="${post.liked ? 'liked' : ''}" onclick="toggleLike(${index})">
+              <i class="fas fa-heart"></i> (${post.likes}) إعجاب
+            </button>
+            <button onclick="focusComment(${index})">
+              <i class="fas fa-comment"></i> تعليق
+            </button>
+            <button onclick="deletePost(${index})">
+              <i class="fas fa-trash"></i> حذف
+            </button>
           </div>
-          <div class="comment-box">
-            <input type="text" placeholder="Write a comment..." onkeydown="submitComment(event, ${index})"/>
-          </div>
-          <div class="comments" id="comments${index}">
-            ${post.comments.map((c, i) => `
-              <p>${c.text}
-                <button onclick="deleteComment(${index}, ${i})">❌</button>
-                <button onclick="replyToComment(${index}, ${i})">↪️ Reply</button>
-                ${c.reply ? `<div class="reply">${c.reply} <button onclick="removeReply(${index}, ${i})">❌</button></div>` : ''}
-              </p>
-            `).join('')}
+          <div class="comment-section">
+            <div class="comment-input" id="commentInput${index}">
+              <input type="text" placeholder="اكتب تعليقاً..." onkeydown="submitComment(event, ${index})"/>
+              <button onclick="submitCommentBtn(${index})"><i class="fas fa-paper-plane"></i></button>
+            </div>
+            ${commentsHTML}
           </div>
         `;
-        postEl.innerHTML = content;
         container.appendChild(postEl);
       });
     }
 
+    // Post actions
     function toggleLike(i) {
       posts[i].liked = !posts[i].liked;
       posts[i].likes += posts[i].liked ? 1 : -1;
@@ -247,37 +587,45 @@
     }
 
     function deletePost(i) {
-      posts.splice(i, 1);
-      renderPosts();
-    }
-
-    function toggleEdit(i) {
-      const p = document.getElementById(`text${i}`);
-      if (p.contentEditable === "true") {
-        posts[i].text = p.innerText;
-        p.contentEditable = "false";
-      } else {
-        p.contentEditable = "true";
-        p.focus();
+      if (confirm("هل أنت متأكد من حذف هذا المنشور؟")) {
+        posts.splice(i, 1);
+        renderPosts();
       }
     }
 
+    function focusComment(i) {
+      const commentInput = document.getElementById(`commentInput${i}`).querySelector('input');
+      commentInput.focus();
+    }
+
+    // Comment actions
     function submitComment(e, i) {
-      if (e.key === "Enter") {
+      if (e.key === "Enter" && e.target.value.trim()) {
         posts[i].comments.push({ text: e.target.value, reply: null });
         e.target.value = '';
         renderPosts();
       }
     }
 
+    function submitCommentBtn(i) {
+      const input = document.getElementById(`commentInput${i}`).querySelector('input');
+      if (input.value.trim()) {
+        posts[i].comments.push({ text: input.value, reply: null });
+        input.value = '';
+        renderPosts();
+      }
+    }
+
     function deleteComment(postIndex, commentIndex) {
-      posts[postIndex].comments.splice(commentIndex, 1);
-      renderPosts();
+      if (confirm("هل أنت متأكد من حذف هذا التعليق؟")) {
+        posts[postIndex].comments.splice(commentIndex, 1);
+        renderPosts();
+      }
     }
 
     function replyToComment(postIndex, commentIndex) {
-      const reply = prompt("Your reply:");
-      if (reply) {
+      const reply = prompt("اكتب ردك:");
+      if (reply && reply.trim()) {
         posts[postIndex].comments[commentIndex].reply = reply;
         renderPosts();
       }
@@ -287,6 +635,9 @@
       posts[postIndex].comments[commentIndex].reply = null;
       renderPosts();
     }
+
+    // Initial render
+    renderPosts();
   </script>
 </body>
 </html>
